@@ -1,0 +1,5 @@
+spring:
+  data:
+    elasticsearch:
+      cluster-names : docker-cluster
+      cluster-node : http://localhost:9200/

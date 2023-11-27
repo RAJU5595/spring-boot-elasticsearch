@@ -40,14 +40,12 @@ public class ProductController {
     }
 
     @GetMapping(value = "/matchAll",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public String matchAll() throws IOException {
         SearchResponse<Map>  searchResponse = elasticSearchService.matchAllService();
         return searchResponse.hits().hits().toString();
     }
 
     @GetMapping(value = "/matchAllProducts",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     public List<Product> matchAllProds() throws IOException {
         SearchResponse<Product>  searchResponse = elasticSearchService.matchAllProductService();
         List<Hit<Product>> hits = searchResponse.hits().hits();
@@ -57,5 +55,28 @@ public class ProductController {
         }
         return products;
     }
+
+    @GetMapping(value = "/matchAllProductsWithName/{fieldValue}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Product> matchAllProdsWithName(@PathVariable String fieldValue) throws IOException {
+        SearchResponse<Product>  searchResponse = elasticSearchService.matchProductsWithName(fieldValue);
+        List<Hit<Product>> hits = searchResponse.hits().hits();
+        List<Product> products = new ArrayList<>();
+        for(Hit<Product> hit : hits){
+            products.add(hit.source());
+        }
+        return products;
+    }
+
+    @GetMapping(value = "/fuzzySearch/{fieldValue}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Product> fuzzySearch(@PathVariable String fieldValue) throws IOException {
+        SearchResponse<Product>  searchResponse = elasticSearchService.fuzzySearch(fieldValue);
+        List<Hit<Product>> hits = searchResponse.hits().hits();
+        List<Product> products = new ArrayList<>();
+        for(Hit<Product> hit : hits){
+            products.add(hit.source());
+        }
+        return products;
+    }
+
 
 }

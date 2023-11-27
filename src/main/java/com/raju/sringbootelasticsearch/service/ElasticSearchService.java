@@ -32,4 +32,14 @@ public class ElasticSearchService {
         Supplier<Query> supplier = ElasticSearchUtil.supplier();
         return elasticsearchClient.search(s->s.index("customers").query(supplier.get()),Customer.class);
     }
+
+    public SearchResponse<Product> matchProductsWithName(String fieldValue) throws IOException {
+        Supplier<Query> supplier = ElasticSearchUtil.supplierMatchQueryWithName(fieldValue);
+        return elasticsearchClient.search(s->s.index("products").query(supplier.get()),Product.class);
+    }
+
+    public SearchResponse<Product> fuzzySearch(String fieldValue) throws IOException {
+        Supplier<Query> supplier = ElasticSearchUtil.fuzzyQuerySupplier(fieldValue);
+        return elasticsearchClient.search(s->s.index("products").query(supplier.get()),Product.class);
+    }
 }
